@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "gen.proto.grpc.gen";
+option java_outer_classname = "EventProto";
+
+package event;
+
+message EventType
+{
+  string subject = 1;
+  string city = 2; 
+}
+
+message Event
+{
+  string subject = 1;
+  string city = 2;
+  string description = 3;
+  int32 vacancies = 4;
+  repeated string additionalInformation = 5;
+  
+}
+
+service EventNotifier {
+  rpc subscribe(EventType) returns (stream Event);
+}
