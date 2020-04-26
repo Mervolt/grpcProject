@@ -11,6 +11,8 @@ import gen.proto.grpc.gen.Event;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
+import javax.swing.text.html.HTMLDocument;
+
 public class MeetingEventServer {
     private static final Logger logger = Logger.getLogger(MeetingEventServer.class.getName());
     private int port = 50052;
@@ -19,12 +21,17 @@ public class MeetingEventServer {
     List<Event> events = new ArrayList<>();
     List<Event> synchroEvents = Collections.synchronizedList(events);
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         final MeetingEventServer server = new MeetingEventServer();
-        server.start();
-
-        server.startGeneratingEvents(server.synchroEvents);
-        server.blockUntilShutdown();
+        try {
+            server.start();
+            server.startGeneratingEvents(server.synchroEvents);
+            server.blockUntilShutdown();
+        }
+        catch (IOException ioex) {
+            ioex.printStackTrace();
+            throw new RuntimeException("IO Failure!");
+         }
 
     }
 
@@ -55,9 +62,14 @@ public class MeetingEventServer {
         executor.execute(generator);
     }
 
-    private void blockUntilShutdown() throws InterruptedException {
+    private void blockUntilShutdown() {
         if (server != null) {
-            server.awaitTermination();
+            try {
+                server.awaitTermination();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Server Interrupted while awaiting termination");
+            }
         }
     }
 

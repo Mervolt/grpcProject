@@ -19,7 +19,6 @@ public class EventNotifierImpl extends EventNotifierImplBase {
                           io.grpc.stub.StreamObserver<gen.proto.grpc.gen.Event> responseObserver) {
         System.out.println("Subscription request arrive: " + request.getCity() + " " + request.getSubject());
 
-
         int eventIterator = 0;
 
         while (true) {

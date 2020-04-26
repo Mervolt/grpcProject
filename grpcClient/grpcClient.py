@@ -7,7 +7,6 @@ import event_pb2
 import event_pb2_grpc
 import time
 
-
 def create_request():
     try:
         for response in stub.subscribe(event):
@@ -29,8 +28,10 @@ logging.basicConfig()
 # open a gRPC channel
 channel = grpc.insecure_channel('localhost:50052')
 
+
 # create a stub (client)
 stub = event_pb2_grpc.EventNotifierStub(channel)
+print("Connected to server")
 print("Please write subscription in format City-Subject.. Leave blank if you want all e.g. all Cities job -> -Job")
 wantedSub = input()
 sub = wantedSub.split("-")
